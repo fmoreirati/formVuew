@@ -9,7 +9,7 @@
         :id="`${props.label}Input`"
         :type="props.type"
         :placeholder="props.help"
-        :requiere="props.required"
+        :required="props.required"
         @blur="validateField(value)"
         @input="validateField(value)"
       />
@@ -76,15 +76,12 @@ const value = computed({
 })
 
 function validateField(value?: string) {
-  if (typeof props.validation == undefined) {
+  if (typeof props.validation == 'boolean') {
     isValid.value = props.validation || !props.required
     return
   }
 
   switch (props.type) {
-    case 'test':
-      isValid.value = isValue(value) || !props.required
-      break
     case 'email':
       isValid.value = isEmail(value) || !props.required
       break
@@ -93,6 +90,9 @@ function validateField(value?: string) {
       break
     case 'tel':
       isValid.value = isPhone(value) || !props.required
+      break
+    default:
+      isValid.value = isValue(value) || !props.required
   }
 }
 
@@ -101,6 +101,9 @@ function applyMask(value?: string) {
     case 'tel': {
       return maskPhone(value ?? '')
     }
+
+    default:
+      return value
   }
 }
 </script>
